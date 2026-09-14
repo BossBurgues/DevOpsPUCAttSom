@@ -1,0 +1,39 @@
+name: Pipeline
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  ci:
+    name: CI - testes
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+      - run: npm ci
+      - run: npm test
+
+  cd:
+    name: CD - build e smoke test do container
+    needs: ci                      # só roda se o CI passar
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build da imagem
+        run: docker build -t devops-puc-attsom:${{ github.sha }} .
+      - name: Subir o container
+        run: docker run -d -p 3000:3000 --name minha-app devops-puc-attsom:${{ github.sha }}
+      - name: Esperar subir
+        run: sleep 5
+      - name: Verificar que responde
+        run: |
+          curl --fail http://localhost:3000 | grep '"status":"ok"'
+      - name: Derrubar o container
+        if: always()
+        run: docker rm -f minha-app
