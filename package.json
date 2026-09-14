@@ -1,5 +1,12 @@
 {
+  "name": "devops-puc-attsom",
+  "version": "1.0.0",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node --test"
+  },
   "dependencies": {
-    "node": "^26.8.2"
+    "express": "^4.19.2"
   }
 }
