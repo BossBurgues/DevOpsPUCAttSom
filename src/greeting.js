@@ -1,4 +1,18 @@
-function buildMessage() {
-  return { message: "Ola, Docker!", status: "ok" };
+function buildMessage(name) {
+  const alvo = name && name.trim() ? name.trim() : "Docker";
+  return { message: `Ola, ${alvo}!`, status: "ok" };
 }
-module.exports = { buildMessage };
+
+function soma(a, b) {
+  return a + b;
+}
+
+function ehPar(n) {
+  return n % 2 === 0;
+}
+
+function inverter(texto) {
+  return String(texto).split("").reverse().join("");
+}
+
+module.exports = { buildMessage, soma, ehPar, inverter };
